@@ -1,23 +1,20 @@
-import { Component, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-author',
-  imports: [],
+  imports: [AsyncPipe],
   templateUrl: './author.html',
   styleUrl: './author.css',
 })
 export class Author {
-  authorId = signal('');
   private activatedRoute = inject(ActivatedRoute);
 
-  constructor() {
-    this.activatedRoute
-        .params
-        .subscribe(
-          (params) => {
-            this.authorId
-                .set(params['id']);
-          });
-  }
+  readonly authorSubscription$ = this.activatedRoute
+                                     .data
+                                     .pipe(
+                                        map((authorData) => authorData['author'])
+                                      );
 }

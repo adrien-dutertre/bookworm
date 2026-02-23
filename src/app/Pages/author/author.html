@@ -1,1 +1,6 @@
-<p>Page auteurice n°{{ authorId() }}</p>
+@let author = authorSubscription$ | async;
+
+<h1>{{ author.personal_name }}</h1>
+<h4>{{ author.fuller_name }}</h4>
+<p>{{ author.birth_date }}</p>
+<p>{{ author.bio.value }}</p>
