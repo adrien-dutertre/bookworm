@@ -1,10 +1,18 @@
 import { Routes } from '@angular/router';
 import { Login } from './Pages/login/login';
-import { Home } from './Pages/home/home';
 import { authGuard } from './Guards/auth-guard';
+import { Search } from './Pages/search/search';
+import { Work } from './Pages/work/work';
+import { Author } from './Pages/author/author';
+import { Favorites } from './Pages/favorites/favorites';
 
 export const routes: Routes = [
-  { path: '', component: Home, title: 'Accueil', canActivate: [authGuard] },
+  { path: '', redirectTo:'/search', pathMatch: 'full' }, // Pas de page d'accueil pour le moment donc redirection automatique vers la recherche
+  { path: 'search', component: Search, title: 'Recherche', canActivate: [authGuard] },
+  { path: 'favorites', component: Favorites, title: 'Favoris', canActivate: [authGuard] },
+  { path: 'work/:id', component: Work, title: 'Ouvrage', canActivate: [authGuard] },
+  { path: 'author/:id', component: Author, canActivate: [authGuard] },
+
   { path: 'login', component: Login, title: 'Connexion' },
-  { path: '**', redirectTo: ''},
+  { path: '**', redirectTo: '' },
 ];

@@ -26,6 +26,14 @@ export class Authentication {
 
   // Définit si l'utilisateur est identifié et connecté
   isAuthenticate(): boolean {
+    this.isSessionAuthenticate()
     return this.userAuthentication;
+  }
+
+  // Vérification du localStorage
+  isSessionAuthenticate(): void {
+    if (localStorage.getItem("userAuthenticated") === "true") {
+      this.userAuthentication = true;
+    }
   }
 }
