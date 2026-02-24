@@ -1,1 +1,51 @@
-<p>search works!</p>
+<a [routerLink]="['/author', 'OL26320A']">Auteurice</a>
+<a [routerLink]="['/work', 'OL45804W']">Ouvrage</a>
+
+<form (submit)="search($event)">
+  <div class="input-group">
+    <span class="input-group-text">
+      <label for="search-bar-id">Rechercher</label>
+    </span>
+    <input
+      type="text"
+      [formField]="searchForm.query"
+      class="form-control form-control-lg"
+      id="search-bar-id"
+    />
+    <button class="btn btn-primary">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-search"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+        />
+      </svg>
+    </button>
+  </div>
+  <div class="form-text">Rechercher un ouvrage par nom, auteur.ice, ...</div>
+</form>
+
+@if (loading()) {
+  <p>Chargement des résultats</p>
+} @else if (!loading()) {
+  <h1>{{ searchResults().numFound }} résultats</h1>
+  <ul>
+    @for (work of searchResults().docs; track $index) {
+      <li>
+        @let imgSrc = searchService.getCover(work.cover_i?.toString() || -1);
+        <img [src]="imgSrc" alt="Couverture de l'ouvrage">
+        <a [routerLink]="['/work', searchService.getWorkKey(work.key)]">{{ work.title }}</a>
+        <p>
+          @for (author of work.author_name; track $index) {
+            <span class="mr-3">{{ author }}</span>
+          }
+        </p>
+      </li>
+    }
+  </ul>
+}

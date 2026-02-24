@@ -1,1 +1,15 @@
-<p>work works!</p>
+@let work = workSubscription$ | async;
+
+<h1>{{ work.title }}</h1>
+<h4>{{ work.subtitle }}</h4>
+<p>Auteur.ice(s) :</p>
+@for (author of work.authors; track $index) {
+    @let authorKey = searchService.getAuthorKey(author.author.key);
+    <a class="mr-3" [routerLink]="['/author', authorKey]">{{ author.author.key }}</a>
+}
+<p>{{ work.description.value ? work.description.value:work.description }}</p>
+
+@let imgSrc = searchService.getCover(work.covers[0]);
+<img [src]="imgSrc" alt="Couverture de l'ouvrage">
+
+<small>{{ work.key }}</small>
