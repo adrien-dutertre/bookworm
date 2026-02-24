@@ -1,10 +1,18 @@
-import { ResolveFn } from '@angular/router';
-import { iWork } from '../work.interface';
-import { Observable } from 'rxjs';
+import { RedirectCommand, ResolveFn, Router } from '@angular/router';
+import { catchError, Observable, of } from 'rxjs';
 import { inject } from '@angular/core';
-import { WorkService } from '../work.service';
+import { singleWork } from '../Interface/utils.interface';
+import { SearchService } from '../search.service';
 
-export const workResolver: ResolveFn<iWork> = (route, state): Observable<iWork> => {
-  const workService = inject(WorkService);
-  return workService.getFullWork(route.params['id']);
+export const workResolver: ResolveFn<singleWork> = (route, state): Observable<singleWork | RedirectCommand> => {
+  const searchService = inject(SearchService);
+  const router = inject(Router);
+  
+  return searchService.getFullWork(route.params['id'])
+                      .pipe(
+                        catchError((error) => {
+                          return of(new RedirectCommand(router.parseUrl('/404')));
+                        })
+                      );
+  
 };

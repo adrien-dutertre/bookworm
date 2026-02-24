@@ -7,6 +7,7 @@ import { Author } from './Pages/author/author';
 import { Favorites } from './Pages/favorites/favorites';
 import { workResolver } from './Services/Resolvers/work-resolver';
 import { authorResolver } from './Services/Resolvers/author-resolver';
+import { NotFound } from './Pages/not-found/not-found';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/search', pathMatch: 'full' }, // Pas de page d'accueil pour le moment donc redirection automatique vers la recherche
@@ -31,5 +32,6 @@ export const routes: Routes = [
   },
 
   { path: 'login', component: Login, title: 'Connexion' },
+  { path: '404', component: NotFound, title: 'Erreur 404'},
   { path: '**', redirectTo: '' },
 ];

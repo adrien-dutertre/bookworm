@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { RouterLink } from "@angular/router";
-import { WorkService } from '../../Services/work.service';
-import { Subscription } from 'rxjs';
+import { SearchService } from '../../Services/search.service';
+import { Subscription, tap } from 'rxjs';
 import { form, FormField } from '@angular/forms/signals';
 
 @Component({
@@ -11,10 +11,12 @@ import { form, FormField } from '@angular/forms/signals';
   styleUrl: './search.css',
 })
 export class Search {
-  workService = inject(WorkService);
-  searchResults = this.workService.works;
+  searchService = inject(SearchService);
+  searchResults = this.searchService.works;
 
   private subscription!: Subscription;
+
+  loading = signal(false);
 
   // Formulaire de recherche
   searchModel = signal({
@@ -25,8 +27,12 @@ export class Search {
   // Requête de recherche
   search(event: Event): void {
     event.preventDefault();
-    this.subscription = this.workService
+
+    this.loading.set(true);
+    this.subscription = this.searchService
                             .getWorks(this.searchModel().query)
-                            .subscribe();
+                            .subscribe(() => {
+                              this.loading.set(false);
+                            });
   }
 }
