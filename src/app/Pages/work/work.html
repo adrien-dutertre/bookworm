@@ -1,15 +1,25 @@
 @let work = workSubscription$ | async;
 
-<h1>{{ work.title }}</h1>
-<h4>{{ work.subtitle }}</h4>
-<p>Auteur.ice(s) :</p>
-@for (author of work.authors; track $index) {
-    @let authorKey = searchService.getAuthorKey(author.author.key);
-    <a class="mr-3" [routerLink]="['/author', authorKey]">{{ author.author.key }}</a>
-}
-<p>{{ work.description.value ? work.description.value:work.description }}</p>
 
-@let imgSrc = searchService.getCover(work.covers[0]);
-<img [src]="imgSrc" alt="Couverture de l'ouvrage">
+<div class="container bg-light-subtle rounded mt-3 p-3">
+  <div class="row">
+    <div class="col">
+      <h1>{{ work.title }}</h1>
+      <h4>{{ work.subtitle }}</h4>
+      <p>
+        @for (author of work.authors; track $index) {
+          @let authorId = author.author.key;
+          @let authorKey = searchService.getAuthorKey(authorId);
+          <!-- @let authorName = this.searchService.getAuthorName(authorKey); -->
+          <a class="mr-3" [routerLink]="['/author', authorKey]">{{ authorId }}</a>
+        }
+      </p>
 
-<small>{{ work.key }}</small>
+      <p class="max-w-xl">{{ work.description?.value ? work.description.value : work.description }}</p>
+    </div>
+    <div class="col-3">
+      @let imgSrc = searchService.getCover(work.covers[0], 'L');
+      <img [src]="imgSrc" class="img-fluid img-thumbnail" [alt]="'Couverture de '+work.title" />
+    </div>
+  </div>
+</div>

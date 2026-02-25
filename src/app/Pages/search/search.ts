@@ -1,12 +1,12 @@
-import { Component, inject, OnDestroy, signal } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { Component, inject, signal } from '@angular/core';
 import { SearchService } from '../../Services/search.service';
-import { Subscription, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { form, FormField } from '@angular/forms/signals';
+import { Results } from "../../Components/results/results";
 
 @Component({
   selector: 'app-search',
-  imports: [RouterLink, FormField],
+  imports: [FormField, Results],
   templateUrl: './search.html',
   styleUrl: './search.css',
 })
@@ -16,7 +16,9 @@ export class Search {
 
   private subscription!: Subscription;
 
-  loading = signal(false);
+  resultState = signal('pristine');
+
+  gridDisplay = signal(true);
 
   // Formulaire de recherche
   searchModel = signal({
@@ -28,11 +30,11 @@ export class Search {
   search(event: Event): void {
     event.preventDefault();
 
-    this.loading.set(true);
+    this.resultState.set('loading');
     this.subscription = this.searchService
                             .getWorks(this.searchModel().query)
                             .subscribe(() => {
-                              this.loading.set(false);
+                              this.resultState.set('loaded');
                             });
   }
 }
