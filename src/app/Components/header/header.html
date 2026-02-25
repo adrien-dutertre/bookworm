@@ -5,10 +5,10 @@
       @if (authenticationService.isAuthenticate()) {
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['search']">Rechercher</a>
+            <a class="nav-link" [routerLink]="['search']" routerLinkActive="active">Rechercher</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['favorites']">Favoris</a>
+            <a class="nav-link" [routerLink]="['favorites']" routerLinkActive="active">Favoris</a>
           </li>
         </ul>
       }

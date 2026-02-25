@@ -31,11 +31,12 @@ export interface document {
 
 export interface author {
     readonly key: string;
+    readonly name?: string;
     readonly personal_name?: string;
     readonly fuller_name?: string;
     readonly birth_date?: string;
     readonly death_date?: string;
-    readonly bio?: authorBio;
+    readonly bio?: string | authorBio;
     readonly photos?: number[];
 }
 

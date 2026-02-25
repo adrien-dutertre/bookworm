@@ -10,25 +10,27 @@ export class SearchService {
   private http = inject(HttpClient);
 
   // ---- Recherche d'un.e auteur.ice ----
-    author = signal<author>({} as author);
-  
-    private readonly author_api_URL: string = 'https://openlibrary.org/authors/';
-  
-    // Détail d'un.e auteur.ice
-    getDetailledAuthor(authorId: string): Observable<author> {
-      return this.http
-                 .get<author>(this.author_api_URL + `${authorId}.json`)
-                 .pipe(
-                    tap((requestedAuthor) => this.author.set(requestedAuthor)),
-                    catchError((error) => {
-                      console.error('Erreur lors de la récupération de la fiche auteur.ice', error);
-                      throw error;
-                    })
-                  );
-    }
+  author = signal<author>({} as author);
+
+  private readonly author_api_URL: string = 'https://openlibrary.org/authors/';
+
+  // Détail d'un.e auteur.ice
+  getDetailledAuthor(authorId: string): Observable<author> {
+    return this.http
+                .get<author>(this.author_api_URL + `${authorId}.json`)
+                .pipe(
+                  tap((requestedAuthor) => this.author
+                                                .set(requestedAuthor)),
+                  catchError((error) => {
+                    console.error('Erreur lors de la récupération de la fiche auteur.ice', error);
+                    throw error;
+                  })
+                );
+  }
 
   // ---- Recherche d'un unique ouvrage ----
   work = signal<singleWork>({} as singleWork);
+  workAuthors = signal<author[]>([]);
 
   private readonly work_api_URL: string = "https://openlibrary.org/works/";
 
@@ -37,7 +39,8 @@ export class SearchService {
     return this.http
                .get<singleWork>(this.work_api_URL+`${workId}.json`)
                .pipe(
-                  tap((requestedWork) => this.work.set(requestedWork)),
+                  tap((requestedWork) => this.work
+                                             .set(requestedWork)),
                   catchError((error) => {
                       console.error(`Erreur lors de la récupération d'un ouvrage`, error);
                       throw error;
@@ -57,10 +60,12 @@ export class SearchService {
                .get<worksList>(
                 this.search_api_URL, 
                 {
-                  params: this.baseParameters.set('q', query)
+                  params: this.baseParameters
+                              .set('q', query)
                 })
                .pipe(
-                  tap((search) => this.works.set(search)),
+                  tap((search) => this.works
+                                      .set(search)),
                   catchError((error) => {
                     console.error(`Erreur lors de la recherche`, error);
                     throw error;
@@ -82,8 +87,8 @@ export class SearchService {
   // Fonction pour récupérer la couverture de l'ouvrage
   private readonly cover_api_URL = "https://covers.openlibrary.org/b";
 
-  getCover(workKey: string | number): string {
-    return `${this.cover_api_URL}/id/${workKey}-M.jpg`;
+  getCover(workKey: string | number, size: 'S' | 'M' | 'L'): string {
+    return `${this.cover_api_URL}/id/${workKey}-${size}.jpg`;
   }
 
   // Fonction pour récupérer la photo de l'auteur.ice

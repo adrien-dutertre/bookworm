@@ -1,12 +1,20 @@
 @let author = authorSubscription$ | async;
+<div class="container bg-light-subtle rounded mt-3 p-3">
+  <div class="row">
+    <div class="col-2">
+      @let authorKey = searchService.getAuthorKey(author.key);
+      @let imgSrc = searchService.getPicture(authorKey);
 
-<h1>{{ author.personal_name }}</h1>
-<h4>{{ author.fuller_name }}</h4>
-<p>{{ author.birth_date }}</p>
-<p>{{ author.death_date }}</p>
-<p>{{ author.bio.value }}</p>
+      <img [src]="imgSrc" class="img-fluid rounded" alt="Photo de profil de l'auteur.ice" />
+    </div>
+    <div class="col">
+      <h1>{{ author.name }}</h1>
+      <h4>{{ author.fuller_name }}</h4>
+      <small>
+        <span>{{ author.birth_date }}</span> - <span>{{ author.death_date }}</span>
+      </small>
 
-@let authorKey = searchService.getAuthorKey(author.key);
-@let imgSrc = searchService.getPicture(authorKey);
-
-<img [src]="imgSrc" alt="Photo de profil de l'auteur.ice">
+      <p class="max-w-xl">{{ author.bio.value ? author.bio.value : author.bio }}</p>
+    </div>
+  </div>
+</div>

@@ -1,48 +1,48 @@
-<h1>Connexion</h1>
-@if (!formValidity) {
-<div class="alert alert-danger" role="alert">
-  Email ou mot de passe incorrect.
+<div class="container mt-3 w-25 p-3 border rounded bg-light">
+  <h1>Connexion</h1>
+  @if (!formValidity) {
+    <div class="alert alert-danger" role="alert">Email ou mot de passe incorrect.</div>
+  }
+
+  <form (submit)="login($event)" class="flex flex-col">
+    <div class="form-floating mb-3">
+      <input
+        type="email"
+        id="user-email-id"
+        class="form-control"
+        [class.is-invalid]="emailValidity()"
+        placeholder="nom@email.com"
+        [formField]="loginForm.email"
+      />
+      @if (emailValidity()) {
+        <div class="invalid-feedback">
+          @for (error of loginForm.email().errors(); track error) {
+            {{ error.message }}
+          }
+        </div>
+      }
+      <label for="user-email-id">Email</label>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input
+        type="password"
+        id="user-password-id"
+        class="form-control"
+        [class.is-invalid]="passwordValidity()"
+        placeholder="mot de passe"
+        [formField]="loginForm.password"
+      />
+      @if (passwordValidity()) {
+        <div class="invalid-feedback">
+          @for (error of loginForm.password().errors(); track error) {
+            {{ error.message }}
+          }
+        </div>
+      }
+      <label for="user-password-id">Mot de passe</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Connexion</button>
+  </form>
 </div>
-}
-
-<form (submit)="login($event)" class="flex flex-col">
-  <div class="form-floating mb-3">
-    <input
-      type="email"
-      id="user-email-id"
-      class="form-control"
-      [class.is-invalid]="emailValidity()"
-      placeholder="nom@email.com"
-      [formField]="loginForm.email"
-    />
-    @if (emailValidity()) {
-      <div class="invalid-feedback">
-        @for (error of loginForm.email().errors(); track error) {
-          {{ error.message }}
-        }
-      </div>
-    }
-    <label for="user-email-id">Email</label>
-  </div>
-
-  <div class="form-floating mb-3">
-    <input
-      type="password"
-      id="user-password-id"
-      class="form-control"
-      [class.is-invalid]="passwordValidity()"
-      placeholder="mot de passe"
-      [formField]="loginForm.password"
-    />
-    @if (passwordValidity()) {
-      <div class="invalid-feedback">
-        @for (error of loginForm.password().errors(); track error) {
-          {{ error.message }}
-        }
-      </div>
-    }
-    <label for="user-password-id">Mot de passe</label>
-  </div>
-
-  <button type="submit" class="btn btn-primary">Connexion</button>
-</form>
