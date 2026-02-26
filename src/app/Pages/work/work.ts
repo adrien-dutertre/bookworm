@@ -25,11 +25,15 @@ export class Work {
                                       map((workData) => workData['work'])
                                     );
   
-  favoriteManagement(workKey: string) : void {
+  favoriteManagement(workKey: string, workTitle: string, workPhoto: number) : void {
     if (this.favoritesService.isFavorite(workKey)) {
-      this.favoritesService.removeFavorite(workKey);
+      this.favoritesService
+          .removeFavorite(workKey);
     } else {
-      this.favoritesService.addToFavorites(workKey);
+      this.favoritesService.addToFavorites(
+        this.favoritesService
+            .newFavorite(workKey, workTitle, workPhoto)
+      );
     }
   }
 }

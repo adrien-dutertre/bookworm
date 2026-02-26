@@ -1,12 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, linkedSignal, OnChanges, signal, SimpleChanges } from '@angular/core';
 import { SearchService } from '../../Services/search.service';
 import { FavoritesService } from '../../Services/favorites.service';
-import { concatMap, from, take, toArray } from 'rxjs';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-favorites',
-  imports: [JsonPipe, AsyncPipe],
+  imports: [RouterLink],
   templateUrl: './favorites.html',
   styleUrl: './favorites.css',
 })
@@ -15,14 +14,6 @@ export class Favorites {
   readonly searchService = inject(SearchService);
   readonly favoritesService = inject(FavoritesService);
 
-  favoriteWorks$ = from(this.favoritesService.favorites()).pipe(
-    concatMap(favoriteKey => 
-      this.searchService.getFullWork(favoriteKey)
-    ),
-    take(this.favoritesService
-             .favorites()
-             .length),
-    toArray()
-  );
+  favoriteWorks = linkedSignal(() => this.favoritesService.favorites());
 
 }
