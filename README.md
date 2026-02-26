@@ -13,16 +13,17 @@ npm install
 
 ## Development server
 
-To start a local development server, run:
+Pour lancer un serveur local, lancer la commande :
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Une fois que le serveur tourne, ouvrir le navigateur à `http://localhost:4200/`.
 
 ## Architecture
 Le login protège l'application, il y a un guard pour vérifier l'authentification de l'utilisateur (via un service Authentification).
+
 Le service SearchService centralise toutes les demandes de requète ainsi que des utilitaires pour faciliter ces recherches.
 
 Les pages d'ouvrage et d'auteur.ice ont des données pré-chargées avec des resolvers, qui requètent via le SearchService.
@@ -35,6 +36,7 @@ Si je prenais plus de temps, voici quelques features pour continuer :
 - Ajout de la pagination pour les listes d'oeuvres
 - Mettre la requète dans le paramétrage de la route, pour pouvoir relancer
 - Charger les images en cache
+
 Quelques points de dév :
 - Si l'appli grossit, séparer les services de recherche pour les spécialiser
 - Des tests des composants et E2E
