@@ -4,6 +4,7 @@ import { map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { SearchService } from '../../Services/search.service';
 import { author } from '../../Services/Interface/utils.interface';
+import { FavoritesService } from '../../Services/favorites.service';
 
 @Component({
   selector: 'app-work',
@@ -14,6 +15,8 @@ import { author } from '../../Services/Interface/utils.interface';
 export class Work {
   private activatedRoute = inject(ActivatedRoute);
   searchService = inject(SearchService);
+  readonly favoritesService = inject(FavoritesService);
+
   authors = signal<author[]>([]);
 
   readonly workSubscription$ = this.activatedRoute
@@ -21,4 +24,12 @@ export class Work {
                                    .pipe(
                                       map((workData) => workData['work'])
                                     );
+  
+  favoriteManagement(workKey: string) : void {
+    if (this.favoritesService.isFavorite(workKey)) {
+      this.favoritesService.removeFavorite(workKey);
+    } else {
+      this.favoritesService.addToFavorites(workKey);
+    }
+  }
 }

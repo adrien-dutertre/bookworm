@@ -1,1 +1,17 @@
-<p>favorites works!</p>
+@let favorites = favoriteWorks$ | async;
+
+{{ favorites | json }}
+
+<ul>
+@for (work of favorites; track $index) {
+        <li>
+            @let imgSrc = searchService.getCover(work.covers[0] ?? -1, 'S');
+            <img
+              [src]="imgSrc"
+              class="img-fluid rounded mx-auto d-block bg-secondary-subtle"
+              [alt]="work.title.substring(0, 24)"
+            />
+            <h1>{{work.title}}</h1>
+        </li>
+}
+</ul>

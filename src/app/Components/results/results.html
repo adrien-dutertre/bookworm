@@ -17,7 +17,7 @@
       <li class="list-group-item">
         <div class="row">
           <div class="col-1">
-            @let imgSrc = searchService.getCover(work.cover_i?.toString() || -1, 'S');
+            @let imgSrc = searchService.getCover(work.cover_i?.toString() ?? -1, 'S');
             <img
               [src]="imgSrc"
               class="img-fluid rounded mx-auto d-block bg-secondary-subtle"
