@@ -2,10 +2,11 @@ import { Component, inject, linkedSignal, OnChanges, signal, SimpleChanges } fro
 import { SearchService } from '../../Services/search.service';
 import { FavoritesService } from '../../Services/favorites.service';
 import { RouterLink } from '@angular/router';
+import { MissingImg } from '../../Components/missing-img/missing-img';
 
 @Component({
   selector: 'app-favorites',
-  imports: [RouterLink],
+  imports: [RouterLink, MissingImg],
   templateUrl: './favorites.html',
   styleUrl: './favorites.css',
 })

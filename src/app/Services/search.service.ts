@@ -1,7 +1,7 @@
-import { HttpClient, HttpEvent, HttpEventType, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, Observable, pipe, tap } from 'rxjs';
-import { author, singleWork, worksList } from './Interface/utils.interface';
+import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { author, authorWorks, singleWork, worksList, workAuthor } from './Interface/utils.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +11,10 @@ export class SearchService {
 
   // ---- Recherche d'un.e auteur.ice ----
   author = signal<author>({} as author);
+  authorWorks = signal<authorWorks>({} as authorWorks);
 
   private readonly author_api_URL: string = 'https://openlibrary.org/authors/';
+
 
   // Détail d'un.e auteur.ice
   getDetailledAuthor(authorId: string): Observable<author> {
@@ -28,8 +30,23 @@ export class SearchService {
                 );
   }
 
+  // Ouvrages en lien avec un.e auteur.ice
+  getAuthorWorks(authorId: string): Observable<authorWorks> {
+    return this.http
+               .get<authorWorks>(this.author_api_URL + `${authorId}/works.json`)
+               .pipe(
+                  tap((requestedWorks) => this.authorWorks
+                                               .set(requestedWorks)),
+                  catchError((error) => {
+                    console.error('Erreur lors de la récupération de la fiche auteur.ice', error);
+                    throw error;
+                  })
+               );
+  }
+
   // ---- Recherche d'un unique ouvrage ----
   work = signal<singleWork>({} as singleWork);
+  augmentedWork = signal<any>({} as any);
   workAuthors = signal<author[]>([]);
 
   private readonly work_api_URL: string = "https://openlibrary.org/works/";
@@ -46,6 +63,32 @@ export class SearchService {
                       throw error;
                     })
                );
+  }
+
+  getAugmentedWork(workId: string) : Observable<any> {
+    return this.http.get<singleWork>(this.work_api_URL+`${workId}.json`)
+                    .pipe(
+                      switchMap((requestedWork: singleWork) => {
+                        const requestedAuthors$: Observable<author>[] = requestedWork.authors.map((author) => {
+                                                                                      const authorKey = this.getAuthorKey(author.author.key);
+                                                                                      return this.http.get<author>(this.author_api_URL + `${authorKey}.json`).pipe(
+                                                                                        catchError(() => of({ 
+                                                                                          key: authorKey, 
+                                                                                          name: 'Auteur inconnu' 
+                                                                                        } as author))
+                                                                                      );
+                                                                                    });
+
+                        return forkJoin(requestedAuthors$).pipe(
+                          map((authors: author[]) => {
+                            return {
+                              ...requestedWork,
+                              detailedAuthors: authors
+                            }
+                          })
+                        );
+                      })
+                    );
   }
 
   // ---- Recherche de plusieurs ouvrages ----

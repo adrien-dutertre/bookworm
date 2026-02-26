@@ -51,6 +51,19 @@ export interface authorBio {
     readonly value: string;
 }
 
+// Interface des ouvrages liés à un.e auteur.ice
+export interface authorWorks {
+    readonly size: number;
+    readonly entries: linkWork[];
+}
+
+// Interface d'un ouvrage lié
+export interface linkWork {
+    readonly key: string;
+    readonly title?: string;
+    readonly covers?: number[];
+}
+
 // Interface pour un ouvrage mis en favoris
 export interface favoriteWork {
     key: string;

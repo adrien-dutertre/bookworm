@@ -33,8 +33,12 @@ export class Search {
     this.resultState.set('loading');
     this.subscription = this.searchService
                             .getWorks(this.searchModel().query)
-                            .subscribe(() => {
-                              this.resultState.set('loaded');
-                            });
+                            .subscribe(
+                              () => this.resultState.set('loaded'),
+                              (error) => {
+                                this.resultState.set('error');
+                                console.error('Erreur HTTP', error)
+                              },
+                            );
   }
 }

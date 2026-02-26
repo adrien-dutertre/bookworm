@@ -6,12 +6,17 @@
         <li class="list-group-item">
           <div class="row d-flex align-items-center">
             <div class="col-1">
-              @let imgSrc = searchService.getCover(work.photo, 'S');
+              @if (work.photo != -1) {
+@let imgSrc = searchService.getCover(work.photo, 'S');
               <img
                 [src]="imgSrc"
                 class="img-fluid rounded mx-auto d-block bg-secondary-subtle"
                 [alt]="work.title.substring(0, 24)"
               />
+              } @else {
+                <app-missing-img></app-missing-img>
+              }
+              
             </div>
             <div class="col">
               <a [routerLink]="['/work', work.key]" class="h5">{{ work.title }}</a>

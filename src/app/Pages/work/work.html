@@ -7,28 +7,25 @@
       <h4>{{ work.subtitle }}</h4>
       @let workKey = searchService.getWorkKey(work.key);
       @let isFavorite = favoritesService.isFavorite(workKey);
-      <input
-        type="checkbox"
-        class="btn-check"
-        id="addFavoritesButton"
-        [checked]="isFavorite"
-        (change)="favoriteManagement(workKey, work.title, work.covers[0])"
-        autocomplete="off"
-      />
+      <input type="checkbox" class="btn-check" id="addFavoritesButton" [checked]="isFavorite"
+        (change)="favoriteManagement(workKey, work.title, work.covers ? work.covers[0] : -1)" autocomplete="off" />
       <label class="btn btn-sm btn-outline-secondary" for="addFavoritesButton">
         {{ isFavorite ? "Favoris" : "Ajouter aux favoris" }}
       </label>
-      <p>
-        @for (author of work.authors; track $index) {
-          @let authorId = author.author.key;
-          @let authorKey = searchService.getAuthorKey(authorId);
-          <!-- @let authorName = this.searchService.getAuthorName(authorKey); -->
-          <a class="mr-3" [routerLink]="['/author', authorKey]">{{ authorId }}</a>
+      <p class="flex flex-wrap max-w-xl">
+        @for (author of work.detailedAuthors; track $index) {
+
+          @let authorKey = searchService.getAuthorKey(author.key);
+          <a class="mr-3" [routerLink]="['/author', authorKey]">{{ author.name }}</a>
         }
       </p>
 
       <p class="max-w-xl">
-        {{ work.description?.value ? work.description.value : work.description }}
+        @if (work.description) {
+        {{ work.description.value | defaultUndefinedPipe: work.description }}
+        } @else {
+        <i>Aucune description</i>
+        }
       </p>
     </div>
     <div class="col-3">
