@@ -12,5 +12,5 @@ export const authorResolver: ResolveFn<author> = (route, state): Observable<auth
                         catchError((error) => {
                           return of(new RedirectCommand(router.parseUrl('/404')));
                         })
-                      );;
+                      );
 };
