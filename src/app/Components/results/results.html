@@ -1,43 +1,50 @@
 @if (grid()) {
-  <div class="grid grid-cols-2 md:grid-cols-6 gap-2">
-    @for (work of resultsData(); track $index) {
-      <a [routerLink]="['/work', searchService.getWorkKey(work.key)]" class="">
-        @let imgSrc = searchService.getCover(work.cover_i?.toString() || -1, 'M');
-        <img
-          [src]="imgSrc"
-          class="img-fluid img-thumbnail rounded mx-auto d-block h-100 w-100"
-          [alt]="work.title"
-          [title]="work.title"
-      /></a>
-    }
-  </div>
+<div class="grid grid-cols-2 md:grid-cols-6 gap-2">
+  @for (work of resultsData(); track $index) {
+  <a [routerLink]="['/work', searchService.getWorkKey(work.key)]" class="">
+    @let imgSrc = searchService.getCover(work.cover_i?.toString() || -1, 'M');
+    <img [src]="imgSrc" class="img-fluid img-thumbnail rounded mx-auto d-block h-100 w-100" [alt]="work.title"
+      [title]="work.title" />
+  </a>
+  }
+</div>
 } @else if (!grid()) {
-  <ul class="list-group list-group-flush">
-    @for (work of resultsData(); track $index) {
-      <li class="list-group-item">
-        <div class="row">
-          <div class="col-1">
-            @let imgSrc = searchService.getCover(work.cover_i?.toString() ?? -1, 'S');
-            <img
-              [src]="imgSrc"
-              class="img-fluid rounded mx-auto d-block bg-secondary-subtle"
-              [alt]="work.title.substring(0, 24)"
-            />
-          </div>
-          <div class="col">
-            <div class="row h5">
-              <a [routerLink]="['/work', searchService.getWorkKey(work.key)]">{{ work.title }}</a>
-            </div>
-            <div class="row">
-              <small class="text-body-secondary">
-                @for (author of work.author_name; track $index) {
-                  <span class="mr-3">{{ author }}</span>
-                }
-              </small>
-            </div>
-          </div>
+<ul class="list-group list-group-flush">
+  @for (work of resultsData(); track $index) {
+  <li class="list-group-item">
+    <div class="row">
+      <div class="col-1">
+        @if (work.cover_i) {
+        @let imgSrc = searchService.getCover(work.cover_i, 'S');
+        <img [src]="imgSrc" class="img-fluid rounded mx-auto d-block bg-secondary-subtle"
+          [alt]="work.title.substring(0, 24)" />
+        } @else {
+        <div class="ratio ratio-1x1 rounded bg-warning-subtle">
+          <small class="text-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image"
+              viewBox="0 0 16 16">
+              <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+              <path
+                d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z" />
+            </svg>
+          </small>
         </div>
-      </li>
-    }
-  </ul>
+        }
+      </div>
+      <div class="col">
+        <div class="row h5">
+          <a [routerLink]="['/work', searchService.getWorkKey(work.key)]">{{ work.title }}</a>
+        </div>
+        <div class="row">
+          <small class="text-body-secondary">
+            @for (author of work.author_name; track $index) {
+            <span class="mr-3">{{ author }}</span>
+            }
+          </small>
+        </div>
+      </div>
+    </div>
+  </li>
+  }
+</ul>
 }

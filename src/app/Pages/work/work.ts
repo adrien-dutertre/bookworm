@@ -1,14 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { SearchService } from '../../Services/search.service';
-import { author } from '../../Services/Interface/utils.interface';
 import { FavoritesService } from '../../Services/favorites.service';
+import { DefaultUndefinedPipe } from '../../Services/Pipes/default-undefined-pipe';
 
 @Component({
   selector: 'app-work',
-  imports: [AsyncPipe, RouterLink],
+  imports: [AsyncPipe, RouterLink, DefaultUndefinedPipe],
   templateUrl: './work.html',
   styleUrl: './work.css',
 })
@@ -17,14 +17,14 @@ export class Work {
   searchService = inject(SearchService);
   readonly favoritesService = inject(FavoritesService);
 
-  authors = signal<author[]>([]);
-
+  // Récupérer les données du resolver
   readonly workSubscription$ = this.activatedRoute
                                    .data
                                    .pipe(
                                       map((workData) => workData['work'])
                                     );
   
+  // Gestion des favoris pour l'ouvrage
   favoriteManagement(workKey: string, workTitle: string, workPhoto: number) : void {
     if (this.favoritesService.isFavorite(workKey)) {
       this.favoritesService

@@ -8,7 +8,8 @@ export const authorResolver: ResolveFn<author> = (route, state): Observable<auth
   const searchService = inject(SearchService);
   const router = inject(Router);
 
-  return searchService.getDetailledAuthor(route.params['id']).pipe(
+  return searchService.getDetailledAuthor(route.params['id'])
+                      .pipe(
                         catchError((error) => {
                           return of(new RedirectCommand(router.parseUrl('/404')));
                         })

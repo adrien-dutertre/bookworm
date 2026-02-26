@@ -4,17 +4,52 @@
     <div class="col-2">
       @let authorKey = searchService.getAuthorKey(author.key);
       @let imgSrc = searchService.getPicture(authorKey);
+      <picture>
+        <source [srcset]="imgSrc" class="img-fluid rounded" alt="Photo de profil de l'auteur.ice" />
+        <img src="" class="img-fluid rounded bg-warning-subtle ratio ratio-1x1" alt="Photo manquante">
+      </picture>
 
-      <img [src]="imgSrc" class="img-fluid rounded" alt="Photo de profil de l'auteur.ice" />
     </div>
     <div class="col">
       <h1>{{ author.name }}</h1>
       <h4>{{ author.fuller_name }}</h4>
       <small>
-        <span>{{ author.birth_date }}</span> - <span>{{ author.death_date }}</span>
+        <span>{{ author.birth_date | defaultUndefinedPipe: "?"}}</span> - <span>{{ author.death_date |
+          defaultUndefinedPipe: "?" }}</span>
       </small>
-
-      <p class="max-w-xl">{{ author.bio.value ? author.bio.value : author.bio }}</p>
+      @if (author.bio) {
+      <p class="max-w-xl">{{ author.bio.value | defaultUndefinedPipe: author.bio }}</p>
+      } @else {
+      <p><i>Biographie absente</i></p>
+      }
     </div>
   </div>
 </div>
+
+@let works = authorWorksSubscription$ | async;
+@if (works.entries.length > 0) {
+<div class="container mt-3 p-3 border rounded">
+  <h3>Liste de ses oeuvres <span class="text-secondary">({{ works.size > 50 ? 50 : works.size}} / {{ works.size
+      }})</span></h3>
+  <ul class="list-group list-group-flush">
+    @for (work of works.entries; track $index) {
+    <li class="list-group-item">
+      <div class="row d-flex align-items-center">
+        <div class="col-1">
+          @if (work.covers) {
+          @let imgSrc = searchService.getCover(work.covers[0], 'S');
+          <img [src]="imgSrc" class="img-fluid rounded mx-auto d-block bg-secondary-subtle"
+            [alt]="work.title.substring(0, 24)" />
+          } @else {
+          <app-missing-img></app-missing-img>
+          }
+        </div>
+        <div class="col">
+          <a [routerLink]="['/work', searchService.getWorkKey(work.key)]" class="h5 text-primary">{{ work.title }}</a>
+        </div>
+      </div>
+    </li>
+    }
+  </ul>
+</div>
+}
