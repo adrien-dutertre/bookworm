@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
-import { author, authorWorks, singleWork, worksList, workAuthor } from './Interface/utils.interface';
+import { author, authorWorks, singleWork, worksList, workAuthor, singleExtendedWork } from './Interface/utils.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -45,27 +45,13 @@ export class SearchService {
   }
 
   // ---- Recherche d'un unique ouvrage ----
-  work = signal<singleWork>({} as singleWork);
-  augmentedWork = signal<any>({} as any);
+  work = signal<singleExtendedWork>({} as singleExtendedWork);
   workAuthors = signal<author[]>([]);
 
   private readonly work_api_URL: string = "https://openlibrary.org/works/";
 
   // Détail d'un ouvrage
-  getFullWork(workId: string) : Observable<singleWork> {
-    return this.http
-               .get<singleWork>(this.work_api_URL+`${workId}.json`)
-               .pipe(
-                  tap((requestedWork) => this.work
-                                             .set(requestedWork)),
-                  catchError((error) => {
-                      console.error(`Erreur lors de la récupération d'un ouvrage`, error);
-                      throw error;
-                    })
-               );
-  }
-
-  getAugmentedWork(workId: string) : Observable<any> {
+  getAugmentedWork(workId: string) : Observable<singleExtendedWork> {
     return this.http.get<singleWork>(this.work_api_URL+`${workId}.json`)
                     .pipe(
                       switchMap((requestedWork: singleWork) => {

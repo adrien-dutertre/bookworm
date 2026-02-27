@@ -18,6 +18,11 @@ export interface workDescription {
     readonly value: string;
 }
 
+// Interface étendue avec les auteur.ice.s
+export interface singleExtendedWork extends singleWork {
+    detailedAuthors: author[];
+}
+
 // Interface d'une liste d'ouvrage résultante d'une recherche
 export interface worksList {
     readonly numFound: number;
